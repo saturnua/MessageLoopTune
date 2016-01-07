@@ -9,39 +9,39 @@ public class Main {
 		int waitTime = 1000;
 		
 		System.out.println("Please enter time waiting secod thread in millisec (1000 = 1s):");
-		Scanner sc = new Scanner(System.in);	
-		try{
-			waitTime = sc.nextInt();
-		}catch (InputMismatchException ex){
-			System.out.println("Вы ввели неправильное значение в милисекундах, правильное например 1000");
-			Scanner sc1 = new Scanner(System.in);
-			waitTime = sc1.nextInt();
-		}//этот блок всего 1 раз обработает неправильный ввод и можно шире конечно проверить 
 		
+		boolean correctInput = false;
+        Scanner sc = new Scanner(System.in);
+        while (!correctInput) {
+             if (sc.hasNextInt()){
+                correctInput = true;
+                waitTime = sc.nextInt();
+             } else {
+                System.out.println("Try again!");
+                sc.next();
+             }
+        }
 		
 		Runnable thread = new MessageLoop();
 		Thread messageloop = new Thread(thread);
 		
-		System.out.println("Старт MessageLoop thread");
+		System.out.println(messageloop.getName() + " - main: Start MessageLoop thread");
 		messageloop.start();
 		
 		
-		System.out.println("Жду пока второй поток закончит выполнение");
+		System.out.println(messageloop.getName() + " - main: Waiting until MessageLoop will be finished");
 		
-		do{
-			
-			System.out.println("Я жду... ");
-			try{
-				messageloop.join(waitTime);	//ожидание завершения выполнения второго потока
-				System.out.println("Больше ждать не буду!!!");
-				messageloop.interrupt();
-			}catch(InterruptedException e){}
-			
-		}
-		
-		while(messageloop.isAlive());
-		
-		System.out.println("Конец");
-	}
 
+			do{
+				try{
+					messageloop.join(waitTime);	//wait when second thread ends job
+					if(messageloop.isAlive()){
+						System.out.println("         " + messageloop.getName() + " - main: I cannot wait more than " +waitTime + " milliseconds!");
+						messageloop.interrupt();		
+					}
+				}catch(InterruptedException e){}
+			}
+			while(messageloop.isAlive());
+		System.out.println("END");
+	}
 }
