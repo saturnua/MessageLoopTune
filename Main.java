@@ -24,24 +24,22 @@ public class Main {
 		
 		Runnable thread = new MessageLoop();
 		Thread messageloop = new Thread(thread);
+		messageloop.setName("Main");
 		
-		System.out.println(messageloop.getName() + " - main: Start MessageLoop thread");
+		System.out.println(messageloop.getName() + ": Start MessageLoop thread");
 		messageloop.start();
 		
 		
-		System.out.println(messageloop.getName() + " - main: Waiting until MessageLoop will be finished");
+		System.out.println(messageloop.getName() + ": Waiting until MessageLoop will be finished");
 		
-
-			do{
 				try{
 					messageloop.join(waitTime);	//wait when second thread ends job
 					if(messageloop.isAlive()){
-						System.out.println("         " + messageloop.getName() + " - main: I cannot wait more than " +waitTime + " milliseconds!");
+						System.out.println("         " + messageloop.getName() + ": I cannot wait more than " +waitTime + " milliseconds!");
 						messageloop.interrupt();		
 					}
 				}catch(InterruptedException e){}
-			}
-			while(messageloop.isAlive());
+			
 		System.out.println("END");
 	}
 }
