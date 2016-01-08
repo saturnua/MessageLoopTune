@@ -6,29 +6,25 @@ public class MessageLoop implements Runnable{
 	Thread messageloop = new Thread(this);
 	
 	public void run() {
-		int count = 0;
-		
-		for (String string : messagesArray) {
-			count++;	
-			System.out.println(messageloop.getName() + " - Message: " + string);
-			try{
-				Thread.sleep(4000);
-			}
-			catch(InterruptedException ex){
-				System.out.println(messageloop.getName() + ": " + InterruptedException.class.getSimpleName() + ex.getMessage());
-				
-				break;
-			}
-		}
-		
-		if(count==3){
-			System.out.println(messageloop.getName() + ": task completed successfully!");
-		} else{			
-			System.out.println(messageloop.getName() + ": task not completed successfully!");
-		}
-			
-		
-	}
+
+        messageloop.setName("Loop");
+        
+        for (int i = 0; i < messagesArray.length; i++) {
+               System.out.println(messageloop.getName() + ": " + messagesArray[i]);
+               try {
+                      Thread.sleep(4000);
+               } catch (InterruptedException e) {
+                      System.out.println(messageloop.getName() + ": "
+                                   + InterruptedException.class.getSimpleName() + " \""
+                                   + e.getMessage() + "\"");
+                      System.out.println(messageloop.getName()
+                                   + ": task was not completed!");
+                      return;
+               }
+        }
+        System.out.println(messageloop.getName()
+                      + ": task completed successfully!");
+  }
 
 }
 
